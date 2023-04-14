@@ -23,9 +23,21 @@ const submitForm = () => {
     formData.password = $('#password').val();
     formData.email = $('#email').val();
 
-    console.log("Form Data Submitted: ", formData);
+    console.log("form data: ", formData);
+    addCat(formData);
 }
 
+const addCat = (cat) => {
+    $.ajax({
+        url: '',
+        data: cat,
+        type: 'POST',
+        success: (result) => {
+            alert(result.message);
+            location.reload();
+        }
+    })
+}
 const addCards = (items) => {
     items.forEach(item => {
         let itemToAppend = '<div class="col s4 center-align">'+
@@ -39,12 +51,19 @@ const addCards = (items) => {
       $("#card-section").append(itemToAppend)
     });
 }
+const getProjects = () => {
+    $.get('/api/projects',(response) => {
+        if(response.statusCode==200){
+            addCards(response.data);
+        }
+    })
+}
 
 $(document).ready(function(){
     $('.materialboxed').materialbox();
     $('#formSubmit').click(()=>{
         submitForm();
     })
-    addCards(cardList);
+    getProjects();
     $('.modal').modal();
   });
